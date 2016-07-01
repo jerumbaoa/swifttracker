@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="form-top">
+        <div class="form-top-left">
+            <h3>Switfttracker | Dashboard</h3>
+        </div>
+        <div class="form-top-right">
+            <span class="glyphicon glyphicon-dashboard"></span>
+        </div>
+    </div>
+    <div class="form-bottom">
+
+
+        <p>Welcome, {{ user.username }}. Thank you for logging in!</p>
+        <p><button><a href="/logout/">Logout</a></button>
+        <button><a href="{% url 'edit_profile' %}">Edit Profile</a></button></p>
+            
+        <h3>USER'S INFORMATION:</h3>
+            <div class="form-group">
+                
+                        <table>
+                            <tr>
+                                <td><label>First Name:</label></td>
+                                <td>{{ user.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Lastname:</label></td>
+                                <td>{{ user.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Position:</label></td>
+                                <td>{{ prof.position }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Birthdate:</label></td>
+                                <td>{{ prof.birthdate }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Contact No:</label></td>
+                                <td>{{ prof.phone }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Address:</label></td>
+                                <td>{{ prof.address }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Date Joined:</label></td>
+                                <td>{{ user.date_joined }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Age:</label></td>
+                                <td>{{ age }}</td>
+                            </tr>
+                        </table>
+
+            <hr>
+            <table>
+                <thead>
+                    <th>
+                        <tr>
+                        {% if proj %}
+                            <h3>CURRENT PROJECT/s:</h3>
+                        {% endif %}
+                        </tr>
+                    </th>
+                </thead>
+                <tbody>
+                {% for list_proj in proj %}
+                    <tr>
+                        <td>
+                        {{ list_proj.name }} <a href=" {% url 'project_detail' list_proj.id %}">View Details...</a>  
+                        </td>
+                    </tr>
+                {% endfor%}
+                </tbody>
+            </table>
+    </div>
+</div>
+
+{% endblock %}

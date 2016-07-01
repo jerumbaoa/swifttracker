@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}User Registration{% endblock %}
+
+
+{% block content %}
+<div class="col-sm-4 col-sm-offset-3 form-box">
+    <div class="form-top">
+        <div class="form-top-left">
+            <h3>Edit Profile</h3>
+        </div>
+        <div class="form-top-right">
+            <span class="glyphicon glyphicon-edit"></span>
+        </div>
+    </div>
+    <div class="form-bottom">
+        <form class="login-form" role="form" method="post" action=".">{% csrf_token %}
+            <div class="form-group">
+                {{form | crispy}}
+                <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            <div class="form-group">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+$('#datepicker').datepicker([options])
+// Access instance of plugin
+$('#datepicker').data('datepicker')
+</script>
+
+<!--<form method="POST" >{% csrf_token %}
+	Current User: {{ user.username }} <br><br>
+	First name: <input type="text" name="first_name" value="{{ user.first_name }}"><br>
+	Last name: <input type="text" name="last_name" value="{{ user.last_name }}"><br>
+	{{ form.as_p }}
+	<input type="hidden" name="username" value="{{ user.username }}">
+	<button type="submit">Save</button>
+</form>-->
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Project{% endblock %}
+{% block content %}
+<div class="col-md-6 col-md-offset-3">
+    <div class="form-top">
+        <div class="form-top-left">
+            <h3>{{ user.first_name }} | Project | {{ data.name }}</h3>
+        </div>
+        <div class="form-top-right">
+            <span class="glyphicon glyphicon-dashboard"></span>
+        </div>
+    </div>
+    <div class="form-bottom">
+		<b>Position: </b>{{ data.position }}
+
+		<br>
+		<b>Weekly Hours: </b>{{ data.weekly_hours}}
+		<hr>
+		<h3> Weekly Reports </h3>
+
+		<button><a href="{% url 'add_report' data.id %}">Add Report</a></button>
+		
+		{% for report in reports %}
+  		       
+		<div class="jumbotron">
+	    	<p>
+       		<label>Title: </label>{{ report.title }}<br>
+       		<label>Date: </label>{{ report.date_track }}<br>
+      		</p>
+	    	<label>What i did?: </label>{{ report.question1 }}<br>
+	    	<label>What to do?: </label>{{ report.question2 }}<br>
+	    	<label>Issues / Blocker: </label>{{ report.question3 }}<br>
+	    	<label>Weekly hours: </label>{{ report.time_track }}<br>
+    	</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

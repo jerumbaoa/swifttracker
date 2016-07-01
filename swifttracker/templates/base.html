@@ -1,0 +1,51 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+
+
+        <title>internal project|
+        {% block title %}{% endblock %}</title>       
+        
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/form-elements.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/datepicker.min.css' %}">
+
+        <script type="text/javascript" source="{% static 'bootstrap/js/datepicker.min.js' %}"></script>
+        
+        <h1>{% block head %}{% endblock %}</h1>
+        
+
+
+    </head>
+    <body>
+
+        <!-- Top content -->
+        <div class="top-content">
+            
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        
+                        {% block content %}
+                        {% endblock %}
+
+                    </div>           
+                </div>
+            </div>
+            
+        </div>
+
+        <script type="text/javascript" source="http:/ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <!--<script type="text/javascript" source="{% static 'bootstrap/js/jquery.min.js' %}"></script>-->
+       <!--  <script type="text/javascript" source="{% static 'js/jquery-1.11.1.min.js' %}"></script> -->
+        <script type="text/javascript" source="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <!--<script type="text/javascript" source="{% static 'js/jquery.backstretch.min.js' %}"></script>
+        <script type="text/javascript" source="{% static 'js/scripts.js' %}"></script>-->
+        
+        {% block javascript %}
+        {% endblock %}
+    </body>
+</html>
