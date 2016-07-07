@@ -10,46 +10,75 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from .models import Profile, Project, WeeklyReport
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings
 import datetime
+from django.views.generic import RedirectView, TemplateView
 
-@csrf_protect
-def register_view(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+
+class RegisterView(TemplateView):
+    template_name = 'registration/register.html'
+    context = {}
+
+    def get (self, *args, **kwargs):
+        self.context['form'] = RegistrationForm()
+        return render(self.request, self.template_name, self.context)
+
+    def post(self, *args, **kwargs):
+        data = self.request.POST
+        form = RegistrationForm(data, request=self.request)
+
         if form.is_valid():
-            info = request.POST
-
-            user = User.objects.create_user(
-            username=form.cleaned_data['username'],
-            password=form.cleaned_data['password1'],
-            email=form.cleaned_data['email']
-            )
-
-            #name = User.objects.get(username=info['username'])
-            profile = Profile.objects.create(user=name, position='', phone='', address='')
-
+            form.save()
             return HttpResponseRedirect('/register/success/')
-    else:
-        form = RegistrationForm()
-    variables = RequestContext(request, {
-    'form': form
-    })
+
+        self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
+
+#@csrf_protect        
+# def register_view(request):
+#     if request.method == 'POST':
+#         form = RegistrationForm(request.POST)
+#         if form.is_valid():
+#             info = request.POST
+
+#             user = User.objects.create_user(
+#             username=form.cleaned_data['username'],
+#             password=form.cleaned_data['password1'],
+#             email=form.cleaned_data['email']
+#             )
+
+#             #name = User.objects.get(username=info['username'])
+#             profile = Profile.objects.create(user=name, position='', phone='', address='')
+
+#             return HttpResponseRedirect('/register/success/')
+#     else:
+#         form = RegistrationForm()
+#     variables = RequestContext(request, {
+#     'form': form
+#     })
  
-    return render_to_response(
-    'registration/register.html',
-    variables,
-    )
+#     return render_to_response(
+#     'registration/register.html',
+#     variables,
+#     )
  
-def register_success_view(request):
-    return render_to_response(
-    'registration/success.html',
-    )
+class RegisterSuccessView(TemplateView):
+    template_name = 'registration/success.html'
+# def register_success_view(request):
+#     return render_to_response(
+#     'registration/success.html',
+#     )
  
-def logout_page_view(request):
-    logout(request)
-    return HttpResponseRedirect('/')
+class LogoutView(RedirectView):
+    url = reverse_lazy('index')
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super(LogoutView, self).get(request, args, kwargs)
+# def logout_page_view(request):
+#     logout(request)
+#     return HttpResponseRedirect('/')
  
 @login_required
 def home_view(request):
