@@ -1,12 +1,22 @@
 
 body {
 	background: #ffffff;
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 300;
-    color: #888;
-    line-height: 30px;
-    text-align: center;
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+	font-weight: 300;
+	color: #000;
+	line-height: 30px;
+	text-align: left;
+}
+
+th, td {
+    padding: 5px;
+    text-align: left;
+
+}
+
+h2 {
+    text-shadow: 1px 1px black;
 }
 
 strong { font-weight: 500; }
@@ -19,17 +29,19 @@ a, a:hover, a:focus {
 
 h1, h2 {
 	margin-top: 10px;
-	font-size: 38px;
-    font-weight: 100;
-    color: #555;
-    line-height: 50px;
+	font-size: 25px;
+	font-weight: 100;
+	color: #097184;
+	line-height: 50px;
 }
 
 h3 {
-	font-size: 22px;
-    font-weight: 300;
-    color: #555;
-    line-height: 30px;
+	font-size: 20px;
+	font-weight: 300;
+	color: #555;
+	line-height: 30px;
+	margin-left: 15px;
+	text-align: left;
 }
 
 img { max-width: 100%; }
@@ -110,26 +122,29 @@ img { max-width: 100%; }
 
 .form-top {
 	overflow: hidden;
-	padding: 0 25px 15px 25px;
+	padding: 0px 20px 5px 0px;
 	background: #444;
 	background: rgba(0, 0, 0, 0.35);
-	-moz-border-radius: 4px 4px 0 0; -webkit-border-radius: 4px 4px 0 0; border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 4px 4px 0 0;
+	border-radius: 4px 4px 0 0;
 	text-align: left;
 }
 
 .form-top-left {
 	float: left;
 	width: 75%;
-	padding: 40px 0px 0px 50px;
+	padding: 21px 0px 0px 20px;
 }
 
 .form-top-left h3 { margin-top: 0; color: #fff; }
 .form-top-left p { opacity: 0.8; color: #fff; }
 
 .form-top-right {
-	float: left;
-	width: 25%;
-	padding-top: 25px;
+	float: right;
+	width: 15%;
+	padding-top: 5px;
+	padding-right: 65px;
 	font-size: 66px;
 	color: #fff;
 	line-height: 100px;
@@ -138,9 +153,11 @@ img { max-width: 100%; }
 }
 
 .form-bottom {
-	padding: 25px 75px 60px 75px;
+	padding: 20px 15px 20px 15px;
 	background: #b1cec8;
-	-moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	-webkit-border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
 	text-align: left;
 }
 
@@ -186,4 +203,3 @@ img { max-width: 100%; }
 	h1, h2 { font-size: 32px; }
 
 }
-

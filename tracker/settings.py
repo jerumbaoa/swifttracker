@@ -108,4 +108,4 @@ STATICFILES_DIRS = [
 ]
 
 import django.contrib.auth
-django.contrib.auth.LOGIN_URL = '/'
+django.contrib.auth.LOGIN_URL = 'index'

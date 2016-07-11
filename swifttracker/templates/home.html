@@ -1,84 +1,83 @@
-{% extends "base.html" %}
+{% extends "base_main.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 
-<div class="col-md-6 col-md-offset-3">
-    <div class="form-top">
-        <div class="form-top-left">
-            <h3>Switfttracker | Dashboard</h3>
+
+<div class="col-md-3">
+    <p class="lead">Welcome, {{ user.username }}!
+    <span class="glyphicon glyphicon-menu-right"></span>
+    <span class="glyphicon glyphicon-menu-right"></span>
+    <span class="glyphicon glyphicon-menu-right"></span>
+    </p>
+</div>
+
+<div class="col-md-9">
+    <div class="well">
+        <p><h2>User's Information:</h2></p>
+        <div class="form-group">
+            <table>
+                <tr>
+                    <td><label>First Name:</label></td>
+                    <td>{{ user.first_name }}</td>
+                </tr>
+                <tr>
+                    <td><label>Lastname:</label></td>
+                    <td>{{ user.last_name }}</td>
+                </tr>
+                <tr>
+                    <td><label>Position:</label></td>
+                    <td>{{ profile.position }}</td>
+                </tr>
+                <tr>
+                    <td><label>Birthdate:</label></td>
+                    <td>{{ profile.birthdate }}</td>
+                </tr>
+                <tr>
+                    <td><label>Contact No:</label></td>
+                    <td>{{ profile.phone }}</td>
+                </tr>
+                <tr>
+                    <td><label>Address:</label></td>
+                    <td>{{ profile.address }}</td>
+                </tr>
+                <tr>
+                    <td><label>Date Joined:</label></td>
+                    <td>{{ user.date_joined }}</td>
+                </tr>
+                <tr>
+                    <td><label>Age:</label></td>
+                    <td>{{ age }}</td>
+                </tr>
+            </table>
         </div>
-        <div class="form-top-right">
-            <span class="glyphicon glyphicon-dashboard"></span>
-        </div>
-    </div>
-    <div class="form-bottom">
-
-
-        <p>Welcome, {{ user.username }}. Thank you for logging in!</p>
-        <p><button><a href="/logout/">Logout</a></button>
-        <button><a href="{% url 'edit_profile' %}">Edit Profile</a></button></p>
-            
-        <h3>USER'S INFORMATION:</h3>
-            <div class="form-group">
-                
-                        <table>
-                            <tr>
-                                <td><label>First Name:</label></td>
-                                <td>{{ user.first_name }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Lastname:</label></td>
-                                <td>{{ user.last_name }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Position:</label></td>
-                                <td>{{ prof.position }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Birthdate:</label></td>
-                                <td>{{ prof.birthdate }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Contact No:</label></td>
-                                <td>{{ prof.phone }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Address:</label></td>
-                                <td>{{ prof.address }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Date Joined:</label></td>
-                                <td>{{ user.date_joined }}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Age:</label></td>
-                                <td>{{ age }}</td>
-                            </tr>
-                        </table>
-
+        <div class="form-group">
+            <div class="text-left">
+                <a class="btn btn-success" href="{% url 'edit_profile' %}"><span class="glyphicon glyphicon-edit"></span> | Edit Profile</a>
+            </div>
             <hr>
             <table>
                 <thead>
                     <th>
                         <tr>
-                        {% if proj %}
-                            <h3>CURRENT PROJECT/s:</h3>
+                        {% if project %}
+                            <p><h2>Current Project/s:</h2></p>
                         {% endif %}
                         </tr>
                     </th>
                 </thead>
                 <tbody>
-                {% for list_proj in proj %}
+                {% for list_project in project %}
                     <tr>
                         <td>
-                        {{ list_proj.name }} <a href=" {% url 'project_detail' list_proj.id %}">View Details...</a>  
+                        {{ list_project.name }} <a href=" {% url 'project_detail' list_project.id %}">View Details...</a>  
                         </td>
                     </tr>
                 {% endfor%}
                 </tbody>
             </table>
+        </div>
     </div>
 </div>
 

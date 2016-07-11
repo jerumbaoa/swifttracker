@@ -10,7 +10,8 @@ class ProfileUser(admin.ModelAdmin):
 admin.site.register(Profile, ProfileUser)
 
 class ProjectUser(admin.ModelAdmin):
-	list_display = ['name']
+	list_display = ['name', 'position', 'weekly_hours']
+	filter_horizontal = ['username']
 	class Meta:
 		model = Project
 

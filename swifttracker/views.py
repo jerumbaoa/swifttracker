@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.utils.decorators import method_decorator
 # Create your views here.
 from swifttracker.forms import *
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,12 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings
 import datetime
 from django.views.generic import RedirectView, TemplateView
+
+class LoginMixin(TemplateView):
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginMixin, self).dispatch(*args, **kwargs)
 
 
 class RegisterView(TemplateView):
@@ -35,144 +41,123 @@ class RegisterView(TemplateView):
         self.context['form'] = form
         return render(self.request, self.template_name, self.context)
 
-#@csrf_protect        
-# def register_view(request):
-#     if request.method == 'POST':
-#         form = RegistrationForm(request.POST)
-#         if form.is_valid():
-#             info = request.POST
-
-#             user = User.objects.create_user(
-#             username=form.cleaned_data['username'],
-#             password=form.cleaned_data['password1'],
-#             email=form.cleaned_data['email']
-#             )
-
-#             #name = User.objects.get(username=info['username'])
-#             profile = Profile.objects.create(user=name, position='', phone='', address='')
-
-#             return HttpResponseRedirect('/register/success/')
-#     else:
-#         form = RegistrationForm()
-#     variables = RequestContext(request, {
-#     'form': form
-#     })
- 
-#     return render_to_response(
-#     'registration/register.html',
-#     variables,
-#     )
  
 class RegisterSuccessView(TemplateView):
     template_name = 'registration/success.html'
-# def register_success_view(request):
-#     return render_to_response(
-#     'registration/success.html',
-#     )
- 
+
+
 class LogoutView(RedirectView):
     url = reverse_lazy('index')
 
     def get(self, request, *args, **kwargs):
         logout(request)
         return super(LogoutView, self).get(request, args, kwargs)
-# def logout_page_view(request):
-#     logout(request)
-#     return HttpResponseRedirect('/')
- 
-@login_required
-def home_view(request):
-    if request.user.is_authenticated():
-        prof = Profile.objects.get(user=request.user)
-        proj = Project.objects.filter(username=request.user)
 
-        if prof.birthdate:
-             now = datetime.datetime.now()    
-             profilebd = prof.birthdate.year
-             age = int((datetime.date.today() - prof.birthdate).days / 365.25  )
 
-             context = {'prof':prof,'proj':proj,'age':age}  
-             return render(request,'home.html', context)
+class HomeView(LoginMixin, TemplateView):
+    template_name = 'home.html'
+    context = {}
+
+    def get(self, *args, **kwargs):
+        profile = Profile.objects.get(user=self.request.user)
+        project = Project.objects.filter(username=self.request.user)
+        if profile.birthdate:
+            age = int((datetime.date.today() - profile.birthdate).days / 365.25 )
         else:
-            context = {'prof':prof,'proj':proj}
-        
-            return render(request, 'home.html', context)
-    else:
-        return HttpResponseRedirect(reverse('login'))
-    # prof = Profile.objects.get(user=request.user)
-    # proj = Project.objects.filter(username=request.user)
-    
-    # if info.birthdate:
-    #          now = datetime.datetime.now()    
-    #          profilebd = info.birthdate.year
-    #          age = int((datetime.date.today() - info.birthdate).days / 365.25  )
+            self.context['profile'] = Profile.objects.get(user=self.request.user)
+            self.context['project'] = Project.objects.filter(username=self.request.user)
+            return render(self.request, self.template_name, self.context)
+        self.context['profile'] = profile
+        self.context['project'] = project
+        self.context['age'] = age
 
-    #          context = {'info':info,'proj':proj,'age':age}  
-    # return render(request,'pages/dashboard.html', context)
-    # else:
-    #     context = {'prof':prof,'proj':proj}
-
-    #     return render(request,'home.html',context)
-
-def edit_profile_view(request):
-    profile = Profile.objects.get(user=request.user)
-   
-
-    form = EditForm(initial={
-        'first_name': request.user.first_name,
-        'last_name': request.user.last_name,
-        'position':profile.position,
-        'birthdate': profile.birthdate,
-        'phone':profile.phone,
-        'address':profile.address})
-    if request.method == 'POST':
-        
-        form = EditForm(request.POST)
-        if form.is_valid():
+        return render(self.request, self.template_name, self.context)
             
-            info = request.POST
-            user = User.objects.filter(username=request.user)
-            user.update(first_name = info['first_name'])
-            user.update(last_name = info['last_name'])
-                    
-            profile = Profile.objects.filter(user=request.user)
-            profile.update(
-                position = info['position'],
-                birthdate = info['birthdate'],
-                phone = info['phone'],
-                address = info['address']) 
+
+class EditProfileView(LoginMixin, TemplateView):
+    template_name = 'edit.html'
+    context ={}
+
+    def get(self, *args, **kwargs):
+        profile = Profile.objects.get(user=self.request.user)
+
+        form = EditForm(instance=profile, initial={
+            'first_name':self.request.user.first_name,
+            'last_name':self.request.user.last_name
+            })
+
+        self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
+
+    def post(self, *args, **kwargs):
+        profile = Profile.objects.get(user=self.request.user)
+        form = EditForm(self.request.POST, instance=profile)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            user = User.objects.get(id=self.request.user.id)
+            user.last_name = form.cleaned_data['last_name']
+            user.first_name = form.cleaned_data['first_name']
+            obj.save()
+            user.save()
+
             return HttpResponseRedirect(reverse('home'))
+
         else:
-            return render(request, 'edit.html', {'form':form})
+            self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
 
-    return render(request, 'edit.html', {'form':form})
 
-def project_view(request, project_id): 
-    data = Project.objects.get(id = project_id)
+class ProjectView(LoginMixin, TemplateView):
+    template_name = 'projects.html'
+    context = {}
 
-    reports = WeeklyReport.objects.filter(project_name = data, user = request.user)
-    
-    return render(request ,'projects.html',{'data':data, 'reports':reports })
+    def get(self, *args, **kwargs):
+        data = Project.objects.get(id=kwargs['project_id'])
+        reports = WeeklyReport.objects.filter(project_name=data, user=self.request.user).order_by('-id')
+        self.context['data'] = data
+        self.context['reports'] = reports
+        return render(self.request, self.template_name, self.context)
+        
 
-def  add_report_view(request, project_id):
-    form = WeeklyReportForm()
-    if request.method == 'POST':
-        form = WeeklyReportForm(request.POST)
+class AddReportView(LoginMixin, TemplateView):
+    template_name = 'add_report.html'
+    context = {}
+
+    def get(self, *args, **kwargs):
+        self.context['form'] = WeeklyReportForm()
+        #self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
+
+    def post(self, *args, **kwargs):
+        project = Project.objects.get(id=kwargs['project_id'], username=self.request.user)
+        user = self.request.user
+
+        form = WeeklyReportForm(self.request.POST, user=user, project=project)
         if form.is_valid():
-            info = request.POST
-            projects = Project.objects.get(id=project_id)
-            reports = WeeklyReport.objects.create(
-                project_name = projects, 
-                user = request.user,
-                title = info['title'],
-                date_track = info['date_track'],
-                question1 = info['question1'],
-                question2 = info['question2'],
-                question3 = info['question3'],
-                time_track = info['time_track']
-                )
-            return HttpResponseRedirect(reverse('project_detail', kwargs={'project_id':project_id}))
+            form.save()
+            return HttpResponseRedirect(reverse('project_detail', kwargs={'project_id':kwargs['project_id']}))
         else:
-            return render(request, 'add_report.html', {'form':form})
-            
-    return render(request, 'add_report.html',{'form':form})
+            self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
+
+
+class EditReportView(LoginMixin, TemplateView):
+    template_name = 'edit_report.html'
+    context = {}
+
+    def get(self, *args, **kwargs):
+        project = WeeklyReport.objects.get(user=self.request.user, id=kwargs['report_id'])
+        self.context['form'] = EditWeeklyReportForm(instance=project)
+        #self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
+
+    def post(self, *args, **kwargs):
+        project = WeeklyReport.objects.get(id=kwargs['report_id'])
+        form = EditWeeklyReportForm(self.request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse_lazy('project_detail', kwargs={'project_id':kwargs['project_id']}))
+        else:
+            self.context['form'] = form
+        return render(self.request, self.template_name, self.context)
