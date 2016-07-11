@@ -34,14 +34,32 @@
                 {% for report in reports %}
                        
                 <div class="jumbotron">
-                    <p>
-                    <label>Title: </label>{{ report.title }}<br>
-                    <label>Date: </label>{{ report.date_track }}<br>
-                    </p>
-                    <label>What i did?: </label>{{ report.question1 }}<br>
-                    <label>What to do?: </label>{{ report.question2 }}<br>
-                    <label>Issues / Blocker: </label>{{ report.question3 }}<br>
-                    <label>Weekly hours: </label>{{ report.time_track }}<br>
+                    <div class="form-group">
+                        <p>
+                        <label>Title: </label>{{ report.title }}<br>
+                        <label>Date: </label>{{ report.date_track }}<br>
+                        </p>
+                        
+                        <table>
+                            <tr>
+                                <td><label>What i did?:</label></td>
+                                <td>{{ report.question1 }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>What to do?:</label></td>
+                                <td>{{ report.question2 }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Issues / Blocker:</label></td>
+                                <td>{{ report.question3 }}</td>
+                            </tr>
+                            <tr>
+                                <td><label>Weekly hours:</label></td>
+                                <td>{{ report.time_track }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
                     <div class="text-left">
                         <a class="btn btn-success" href="{% url 'edit_report' data.id report.id %}"><span class="glyphicon glyphicon-edit"></span> | Edit Report</a>
                     </div>

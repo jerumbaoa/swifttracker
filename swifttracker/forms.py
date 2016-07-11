@@ -6,10 +6,30 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Profile, Project, WeeklyReport
 
 class RegistrationForm(forms.ModelForm):
-    username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30, placeholder="Username")), label=_(""), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
-    email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30, placeholder="Email")), label=_(""))
-    password = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False, placeholder="Password")), label=_(""))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False, placeholder="Confirm Password")), label=_(""))
+    username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(
+        attrs=dict(required=True, 
+                    max_length=30, 
+                    placeholder="Username")), 
+                    label=_(""), 
+                    error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") }
+        )
+    email = forms.EmailField(widget=forms.TextInput(
+        attrs=dict(required=True, 
+                    max_length=30, 
+                    placeholder="Email")), 
+                    label=_(""))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs=dict(required=True, 
+                    max_length=30, 
+                    render_value=False, 
+                    placeholder="Password")), 
+                    label=_(""))
+    password2 = forms.CharField(widget=forms.PasswordInput(
+        attrs=dict(required=True, 
+                    max_length=30, 
+                    render_value=False, 
+                    placeholder="Confirm Password")), 
+                    label=_(""))
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -35,7 +55,7 @@ class RegistrationForm(forms.ModelForm):
     def clean(self):
         form_data = self.cleaned_data
         if form_data['password'] != form_data['password2']:
-            self._errors["password"] = ["Passwords did not match!"] # Will raise a error message
+            self._errors["password"] = ["Passwords did not match!"]
             del form_data['password']
         return form_data
 
@@ -57,15 +77,13 @@ class ProfileForm(forms.ModelForm):
 
 
 class EditForm(forms.ModelForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=100, placeholder="Firstname")), label=_(""))
-    last_name = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=100, placeholder="Lastname")), label=_(""))
-    #position = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=100, choices=POSITION, placeholder="Position")), label=_(""))
+    first_name = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=100)))
+    last_name = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=100)))
     birthdate = forms.DateField(widget=forms.TextInput(attrs={
             'id':'datepicker',
             'type':'date'
-            }),input_formats=['%Y-%m-%d'], label=_(""))
-    # phone = forms.IntegerField(widget=forms.TextInput(attrs=dict(required=True, max_length=11, placeholder="Phone")), label=_(""))
-    # address =forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=100, placeholder="Address")), label=_(""))
+            }),input_formats=['%Y-%m-%d'])
+    
     class Meta:
         model = Profile
         fields =('first_name',

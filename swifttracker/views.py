@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-# Create your views here.
-from swifttracker.forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
@@ -9,11 +7,13 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from .models import Profile, Project, WeeklyReport
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.conf import settings
-import datetime
 from django.views.generic import RedirectView, TemplateView
+from .models import Profile, Project, WeeklyReport
+from swifttracker.forms import *
+import datetime
+
 
 class LoginMixin(TemplateView):
     
